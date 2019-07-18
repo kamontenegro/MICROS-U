@@ -17,9 +17,9 @@ int contador;
 String dato;
 
 void setup() {
-  Serial.begin(9600);
-  lcd.begin(16, 2);
 
+  lcd.begin(16, 2);
+  Serial.begin(9600);
   //para la EEPROM
   segundero = EEPROM.read(0);
   minutero = EEPROM.read(1);
@@ -46,28 +46,30 @@ void loop() {
       break;
     case 1:
       Serial.println("ENCENDIDO");
-      contador=0;
+      contador = 0;
       break;
 
   }
   //comparacion para activar tono
   if (contador == 1) {
-    if ( EEPROM.read(2) == EEPROM.read(4)&&EEPROM.read(1) == EEPROM.read(3) ) {
+    if ( EEPROM.read(2) == EEPROM.read(4) && EEPROM.read(1) == EEPROM.read(3) ) {
+      Serial.println("ON");
       digitalWrite(6, HIGH);
     }
   }
   else {
+    Serial.println("OF");
     digitalWrite(6, LOW);
   }
 }
 
 void reloj () {
-  if (segundero <=60) {
+  if (segundero <= 60) {
     segundero++;
   }
   else {
     segundero = 0;
-    if (minutero <=60) {
+    if (minutero <= 60) {
       minutero++;
       EEPROM.update(1, minutero);
     }
@@ -89,7 +91,7 @@ void reloj () {
 
 void alarma() {
   if (i == 1) {
-    if (alarma_minutero <=60) {
+    if (alarma_minutero <= 60) {
       alarma_minutero++;
       EEPROM.update(3, alarma_minutero);
     }
