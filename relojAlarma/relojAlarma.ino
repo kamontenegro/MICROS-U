@@ -27,11 +27,10 @@ void setup() {
   alarma_minutero = EEPROM.read(3);
   alarma_horero = EEPROM.read(4);
 
-  MsTimer2::set(1000, reloj);
-  MsTimer2::start();
+  MsTimer2::set(100, reloj); //varia dependiendo la velocidad del reloj
   attachInterrupt(0, menu, LOW);
   attachInterrupt(1, alarma, LOW);
-
+  MsTimer2::start();
   //salida tono
   pinMode(6, OUTPUT);
 }
@@ -47,13 +46,13 @@ void loop() {
       break;
     case 1:
       Serial.println("ENCENDIDO");
+      contador=0;
       break;
-    default:
-      contador = 0;
+
   }
   //comparacion para activar tono
   if (contador == 1) {
-    if (EEPROM.read(1) == EEPROM.read(3) && EEPROM.read(2) == EEPROM.read(4)) {
+    if ( EEPROM.read(2) == EEPROM.read(4)&&EEPROM.read(1) == EEPROM.read(3) ) {
       digitalWrite(6, HIGH);
     }
   }
@@ -63,19 +62,19 @@ void loop() {
 }
 
 void reloj () {
-  if (segundero < 59) {
+  if (segundero <=60) {
     segundero++;
   }
   else {
     segundero = 0;
-    if (minutero < 59) {
+    if (minutero <=60) {
       minutero++;
       EEPROM.update(1, minutero);
     }
     else {
       EEPROM.update(1, minutero);
       minutero = 0;
-      if (horero < 24) {
+      if (horero < 12) {
         horero++;
         EEPROM.update(2, horero);
       }
@@ -90,7 +89,7 @@ void reloj () {
 
 void alarma() {
   if (i == 1) {
-    if (alarma_minutero < 59) {
+    if (alarma_minutero <=60) {
       alarma_minutero++;
       EEPROM.update(3, alarma_minutero);
     }
@@ -100,7 +99,7 @@ void alarma() {
     }
   }
   if (i == 2) {
-    if (alarma_horero < 24) {
+    if (alarma_horero < 12) {
       alarma_horero++;
       EEPROM.update(4, alarma_horero);
     }
@@ -132,42 +131,42 @@ void menu() {
 void imprimir() {
   if (segundero < 10) {
     lcd.clear();
-    lcd.setCursor(9, 0);
+    lcd.setCursor(8, 0);
     lcd.print(':');
-    lcd.setCursor(10, 0);
+    lcd.setCursor(9, 0);
     lcd.print('0');
-    lcd.setCursor(11, 0);
+    lcd.setCursor(10, 0);
     lcd.print(segundero);
   }
   else {
     lcd.clear();
-    lcd.setCursor(9, 0);
+    lcd.setCursor(8, 0);
     lcd.print(':');
-    lcd.setCursor(10, 0);
+    lcd.setCursor(9, 0);
     lcd.print(segundero);
   }
   if (minutero < 10) {
-    lcd.setCursor(6, 0);
+    lcd.setCursor(5, 0);
     lcd.print(':');
-    lcd.setCursor(7, 0);
+    lcd.setCursor(6, 0);
     lcd.print('0');
-    lcd.setCursor(8, 0);
+    lcd.setCursor(7, 0);
     lcd.print(minutero);
   }
   else {
-    lcd.setCursor(6, 0);
+    lcd.setCursor(5, 0);
     lcd.print(':');
-    lcd.setCursor(7, 0);
+    lcd.setCursor(6, 0);
     lcd.print(minutero);
   }
   if (horero < 10) {
-    lcd.setCursor(4, 0);
+    lcd.setCursor(3, 0);
     lcd.print('0');
-    lcd.setCursor(5, 0);
+    lcd.setCursor(4, 0);
     lcd.print(horero);
   }
   else {
-    lcd.setCursor(4, 0);
+    lcd.setCursor(3, 0);
     lcd.print(horero);
   }
 }
