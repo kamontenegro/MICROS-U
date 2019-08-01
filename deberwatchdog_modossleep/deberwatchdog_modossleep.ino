@@ -38,8 +38,8 @@ void loop() {
   cad = analogRead(A1);
   lcd.setCursor(0, 1);
   lcd.println(cad);
-  Serial.println("EN 4 S lee datos ");
+  Serial.println("EN 2 S lee datos ");
   delay(50);
-  LowPower.powerDown(SLEEP_4S, ADC_OFF, BOD_OFF);
+  LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_OFF);
 
 }
